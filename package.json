@@ -1,0 +1,30 @@
+{
+  "name": "multifunction-gizmo",
+  "description": "Demonstrating the Elm Architecture in TypeScript",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/therealnicksaunders/multifunction-gizmo.git"
+  },
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "devDependencies": {
+    "@types/es6-shim": "^0.31.36",
+    "awesome-typescript-loader": "^4.0.1",
+    "css-loader": "^0.28.11",
+    "es6-shim": "^0.35.3",
+    "html-webpack-plugin": "^3.0.6",
+    "monet": "^0.8.10",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.7",
+    "snabbdom": "^0.7.1",
+    "snabbdom-jsx": "^0.4.2",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.20.3",
+    "typescript": "^2.7.2",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12",
+    "webpack-dev-server": "^3.1.1"
+  }
+}
