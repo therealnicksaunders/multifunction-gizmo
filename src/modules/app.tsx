@@ -1,4 +1,3 @@
-import { Maybe, None, Some } from 'monet';
 import { VNode } from 'snabbdom/vnode';
 import { html } from 'snabbdom-jsx';
 import * as Clock from './clock';
@@ -21,35 +20,29 @@ const mapWeatherAction: (a: Weather.Action) => Action = action => ({ type: 'Weat
 const mapActionPromise: <TAction>(ma: (a: TAction) => Action) => ((p: Promise<TAction>) => Promise<Action>) =
   mapAction => promise => promise.then(mapAction);
 
-const combineActionPromises: (p: Array<Maybe<Promise<Action>>>) => Maybe<Promise<Array<Action>>> = promises => {
-  const some = promises.filter(promise => promise.isSome()).map(promise => promise.some());
-  return some.length ? Some(Promise.all(some)) : None();
-};
-
-export const init: () => [State, Maybe<Promise<Action | Array<Action>>>] = () => {
-  const [ clock, clockAction ] = Clock.init();
-  const [ weather, weatherAction ] = Weather.init();
+export const init: () => [State, Promise<Action>[]] = () => {
+  const [ clock, clockActionPromises ] = Clock.init();
+  const [ weather, weatherActionPromises ] = Weather.init();
 
   return [
     { screen: 'Clock', clock, weather },
-    combineActionPromises([
-      clockAction.map(mapActionPromise(mapClockAction)),
-      weatherAction.map(mapActionPromise(mapWeatherAction))
-    ])
+    []
+      .concat(clockActionPromises.map(mapActionPromise(mapClockAction)))
+      .concat(weatherActionPromises.map(mapActionPromise(mapWeatherAction)))
   ];
 };
 
-export const update: (s: State, a: Action) => [State, Maybe<Promise<Action | Array<Action>>>] =
+export const update: (s: State, a: Action) => [State, Promise<Action>[]] =
   (state, action) => {
     switch (action.type) {
       case 'ChangeScreen':
-        return [{ ...state, screen: action.screen }, None()];
+        return [ { ...state, screen: action.screen }, [] ];
       case 'Clock':
-        const [ clock, clockAction ] = Clock.update(state.clock, action.action);
-        return [ { ...state, clock }, clockAction.map(mapActionPromise(mapClockAction)) ];
+        const [ clock, clockActionPromises ] = Clock.update(state.clock, action.action);
+        return [ { ...state, clock }, clockActionPromises.map(mapActionPromise(mapClockAction)) ];
       case 'Weather':
-        const [ weather, weatherAction ] = Weather.update(state.weather, action.action);
-        return [ { ...state, weather }, weatherAction.map(mapActionPromise(mapWeatherAction)) ];
+        const [ weather, weatherActionPromises ] = Weather.update(state.weather, action.action);
+        return [ { ...state, weather }, weatherActionPromises.map(mapActionPromise(mapWeatherAction)) ];
     }
   };
 

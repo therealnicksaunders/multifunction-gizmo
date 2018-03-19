@@ -9,10 +9,8 @@ export type State = {
   error: Maybe<Error>
 };
 
-export const init: () => [State, Maybe<Promise<Action>>] = () => [
-  { zip: None(), temperature: None(), fetching: false, error: None() },
-  None()
-];
+export const init: () => [State, Promise<Action>[]] =
+  () => [ { zip: None(), temperature: None(), fetching: false, error: None() }, [] ];
 
 export type Action
   = { type: 'SetZip', zip: String }
@@ -20,24 +18,18 @@ export type Action
   | { type: 'SetError', error: Error }
   ;
 
-export const update: (s: State, a: Action) => [State, Maybe<Promise<Action>>] =
+export const update: (s: State, a: Action) => [State, Promise<Action>[]] =
   (state, action) => {
     switch (action.type) {
       case 'SetZip':
         return [
           { ...state, zip: Some(action.zip), fetching: true, temperature: None() },
-          Some(fetchWeather(action.zip))
+          [ fetchWeather(action.zip) ]
         ];
       case 'SetTemperature':
-        return [
-          { ...state, fetching: false, temperature: Some(action.temperature) },
-          None()
-        ];
+        return [ { ...state, fetching: false, temperature: Some(action.temperature) }, [] ];
       case 'SetError':
-        return [
-          { ...state, error: Some(action.error), fetching: false },
-          None()
-        ];
+        return [ { ...state, error: Some(action.error), fetching: false }, [] ];
     }
   };
 
