@@ -25,7 +25,7 @@ export const update: (s: State, a: Action) => [State, Maybe<Promise<Action>>] =
     switch (action.type) {
       case 'SetZip':
         return [
-          { ...state, zip: Some(action.zip), fetching: true },
+          { ...state, zip: Some(action.zip), fetching: true, temperature: None() },
           Some(fetchWeather(action.zip))
         ];
       case 'SetTemperature':
@@ -35,7 +35,7 @@ export const update: (s: State, a: Action) => [State, Maybe<Promise<Action>>] =
         ];
       case 'SetError':
         return [
-          { ...state, error: Some(action.error) },
+          { ...state, error: Some(action.error), fetching: false },
           None()
         ];
     }
@@ -47,14 +47,15 @@ export const view: (props: { state: State, dispatch: (a: Action) => void }) => V
 
     function updateZip(e: KeyboardEvent) {
       const { value } = e.target as HTMLInputElement;
-      value.length === 5 && dispatch({ type: 'SetZip', zip: value });
+      e.key === 'Enter' && dispatch({ type: 'SetZip', zip: value });
     }
 
     return (
       <div>
         <input type="text" size="5" maxlength="5" placeholder="ZIP" {...disabled} on-keypress={updateZip} />
-        {state.temperature.map(temp => <p>Current Temperature: <strong>{temp}</strong></p>)}
-        {state.error.map(err => <p className="error">{err.message}</p>)}
+        {state.fetching ? <span>Fetching...</span> : <span>(Type ZIP code and press Enter)</span>}
+        {state.temperature.map(temp => <p>Current Temperature: <strong>{temp}</strong></p>).orSome(<p></p>)}
+        {state.error.map(err => <p className="error">{err.message}</p>).orSome(<p></p>)}
         <hr />
         Note: Weather results are fake. The temperature is just derived from the first two digits of the ZIP you enter,
         unless you enter a ZIP code beginning with a "3", in which case you will receive an error.
