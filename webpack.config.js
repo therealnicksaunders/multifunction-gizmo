@@ -8,14 +8,13 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js'
   },
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
   },
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
-      { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+      { test: /\.tsx?$/, loader: 'ts-loader' }
     ]
   },
   plugins: [
