@@ -1,4 +1,4 @@
-import { Maybe, None, Some } from 'monet';
+import { Maybe, Some } from 'monet';
 import { VNode } from 'snabbdom/vnode';
 import { html } from 'snabbdom-jsx';
 
