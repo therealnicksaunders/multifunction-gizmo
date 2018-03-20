@@ -7,3 +7,5 @@ See also:
 * [Redux - Data Flow](https://redux.js.org/basics/data-flow)
 * [Flux](https://facebook.github.io/flux/)
 * [TEA guide](https://guide.elm-lang.org/architecture/)
+* [Hyperapp](https://github.com/hyperapp/hyperapp)
+* [Choo.js](https://github.com/choojs/choo)
