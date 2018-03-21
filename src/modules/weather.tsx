@@ -9,7 +9,7 @@ export type State = {
   error: Maybe<Error>
 };
 
-export const init: () => [State, Promise<Action>[]] =
+export const init: () => [State, PromiseLike<Action>[]] =
   () => [ { zip: None(), temperature: None(), fetching: false, error: None() }, [] ];
 
 export type Action
@@ -18,7 +18,7 @@ export type Action
   | { type: 'SetError', error: Error }
   ;
 
-export const update: (s: State, a: Action) => [State, Promise<Action>[]] =
+export const update: (s: State, a: Action) => [State, PromiseLike<Action>[]] =
   (state, action) => {
     switch (action.type) {
       case 'SetZip':
@@ -55,7 +55,7 @@ export const view: (props: { state: State, dispatch: (a: Action) => void }) => V
     );
   };
 
-function fetchWeather(zip: String): Promise<Action> {
+function fetchWeather(zip: String): PromiseLike<Action> {
   return new Promise(resolve => setTimeout(resolve, 1000))
     .then(() => {
       if (zip.startsWith('3')) {

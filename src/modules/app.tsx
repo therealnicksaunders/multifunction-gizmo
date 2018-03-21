@@ -1,5 +1,6 @@
 import { VNode } from 'snabbdom/vnode';
 import { html } from 'snabbdom-jsx';
+import { map } from '../lib/functor/promise-like';
 import * as Clock from './clock';
 import * as Weather from './weather';
 
@@ -17,32 +18,29 @@ const mapClockAction: (a: Clock.Action) => Action = action => ({ type: 'Clock', 
 
 const mapWeatherAction: (a: Weather.Action) => Action = action => ({ type: 'Weather', action });
 
-const mapActionPromise: <TAction>(ma: (a: TAction) => Action) => ((p: Promise<TAction>) => Promise<Action>) =
-  mapAction => promise => promise.then(mapAction);
-
-export const init: () => [State, Promise<Action>[]] = () => {
+export const init: () => [State, PromiseLike<Action>[]] = () => {
   const [ clock, clockActionPromises ] = Clock.init();
   const [ weather, weatherActionPromises ] = Weather.init();
 
   return [
     { screen: 'Clock', clock, weather },
     []
-      .concat(clockActionPromises.map(mapActionPromise(mapClockAction)))
-      .concat(weatherActionPromises.map(mapActionPromise(mapWeatherAction)))
+      .concat(clockActionPromises.map(map(mapClockAction)))
+      .concat(weatherActionPromises.map(map(mapWeatherAction)))
   ];
 };
 
-export const update: (s: State, a: Action) => [State, Promise<Action>[]] =
+export const update: (s: State, a: Action) => [State, PromiseLike<Action>[]] =
   (state, action) => {
     switch (action.type) {
       case 'ChangeScreen':
         return [ { ...state, screen: action.screen }, [] ];
       case 'Clock':
         const [ clock, clockActionPromises ] = Clock.update(state.clock, action.action);
-        return [ { ...state, clock }, clockActionPromises.map(mapActionPromise(mapClockAction)) ];
+        return [ { ...state, clock }, clockActionPromises.map(map(mapClockAction)) ];
       case 'Weather':
         const [ weather, weatherActionPromises ] = Weather.update(state.weather, action.action);
-        return [ { ...state, weather }, weatherActionPromises.map(mapActionPromise(mapWeatherAction)) ];
+        return [ { ...state, weather }, weatherActionPromises.map(map(mapWeatherAction)) ];
     }
   };
 

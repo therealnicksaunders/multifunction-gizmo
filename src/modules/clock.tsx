@@ -3,14 +3,14 @@ import { html } from 'snabbdom-jsx';
 
 export type State = { time: String };
 
-export const init: () => [State, Promise<Action>[]] =
+export const init: () => [State, PromiseLike<Action>[]] =
   () => [ { time: time() }, [ updateTime() ] ];
 
 export type Action
   = { type: 'SetTime', time: String }
   ;
 
-export const update: (s: State, a: Action) => [State, Promise<Action>[]] =
+export const update: (s: State, a: Action) => [State, PromiseLike<Action>[]] =
   (state, action) => {
     switch (action.type) {
       case 'SetTime':
@@ -25,7 +25,7 @@ function time(): String {
   return new Date().toLocaleTimeString();
 }
 
-function updateTime(): Promise<Action> {
+function updateTime(): PromiseLike<Action> {
   return new Promise(resolve => setTimeout(resolve, 1000))
     .then(() => ({ type: 'SetTime', time: time() }) as Action);
 }
