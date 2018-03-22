@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: ['es6-shim', './src/main'],
+  entry: './src/main',
   mode: 'development',
   output: {
     path: path.join(__dirname, 'dist'),
@@ -10,11 +10,15 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.js', '.jsx']
   },
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: 'ts-loader' }
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
     ]
   },
   plugins: [

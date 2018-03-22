@@ -1,0 +1,8 @@
+{
+  "presets": ["env"],
+  "plugins": [
+    ["transform-react-jsx", { "pragma": "snabbdom.html" }],
+    ["transform-react-require", { "identifier": "snabbdom", "moduleName": "snabbdom-jsx" }],
+    ["transform-object-rest-spread"]
+  ]
+}
