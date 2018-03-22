@@ -24,9 +24,6 @@ function render() {
   node = patch(node, newNode);
 
   if (actions) {
-    if (!actions.then) {
-      debugger;
-    }
     actions.then(forEach(dispatch));
     actions = null;
   }
