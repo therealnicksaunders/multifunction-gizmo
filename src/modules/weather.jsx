@@ -17,11 +17,11 @@ export const Action = Type({
   SetError: [Error]
 });
 
-export const update = (state, action) => Action.case({
-  SetZip: zip => [ { ...state, zip, fetching: true, temperature: Nothing }, Promise.all([ fetchWeather(zip) ]) ],
-  SetTemperature: temperature => [ { ...state, temperature: Just(temperature), fetching: false }, Promise.resolve([]) ],
-  SetError: error => [ { ...state, error: Just(error) }, Promise.resolve([]) ]
-}, action);
+export const update = Action.caseOn({
+  SetZip: (zip, state) => [ { ...state, zip, fetching: true, temperature: Nothing }, Promise.all([ fetchWeather(zip) ]) ],
+  SetTemperature: (temperature, state) => [ { ...state, temperature: Just(temperature), fetching: false }, Promise.resolve([]) ],
+  SetError: (error, state) => [ { ...state, error: Just(error) }, Promise.resolve([]) ]
+});
 
 export const view = ({ state, dispatch }) => {
   const disabled = state.fetching ? { disabled: '' } : {};

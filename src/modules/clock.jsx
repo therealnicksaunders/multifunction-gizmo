@@ -9,9 +9,9 @@ export const Action = Type({
   SetTime: [String]
 });
 
-export const update = (state, action) => Action.case({
-  SetTime: time => [ { ...state, time }, Promise.all([ updateTime() ]) ]
-}, action);
+export const update = Action.caseOn({
+  SetTime: (time, state) => [ { ...state, time }, Promise.all([ updateTime() ]) ]
+});
 
 export const view = ({ state, dispatch }) => <div>{state.time}</div>;
 

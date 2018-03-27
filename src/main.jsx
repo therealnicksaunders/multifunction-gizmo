@@ -13,7 +13,7 @@ let node = container;
 let [ state, actions ] = App.init();
 
 function dispatch(action) {
-  const update = App.update(state, action);
+  const update = App.update(action, state);
   state = update[0];
   actions = update[1];
   render();

@@ -29,19 +29,17 @@ export const init = () => {
   ];
 };
 
-export const update = (state, action) => {
-  return Action.case({
-    ChangeScreen: screen => [ { ...state, screen }, Promise.resolve([]) ],
-    Clock: action => {
-      const [ clock, clockActions ] = Clock.update(state.clock, action);
-      return [ { ...state, clock }, clockActions.then(map(Action.Clock)) ];
-    },
-    Weather: action => {
-      const [ weather, weatherActions ] = Weather.update(state.weather, action);
-      return [ { ...state, weather }, weatherActions.then(map(Action.Weather)) ];
-    }
-  }, action);
-};
+export const update = Action.caseOn({
+  ChangeScreen: (screen, state) => [ { ...state, screen }, Promise.resolve([]) ],
+  Clock: (action, state) => {
+    const [ clock, clockActions ] = Clock.update(action, state.clock);
+    return [ { ...state, clock }, clockActions.then(map(Action.Clock)) ];
+  },
+  Weather: (action, state) => {
+    const [ weather, weatherActions ] = Weather.update(action, state.weather);
+    return [ { ...state, weather }, weatherActions.then(map(Action.Weather)) ];
+  }
+});
 
 export const view = ({ state, dispatch }) => {
   const content = Screen.case({
